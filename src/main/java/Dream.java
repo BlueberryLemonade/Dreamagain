@@ -5,30 +5,33 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
+import java.io.FileReader;
 
 
 public class Dream {
-    private static FileWriter file;
+    private static FileWriter filew;
+    private FileReader filer;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("LLLL dd yyyy HH:mma");
     private LocalDateTime dateTime = LocalDateTime.now();
     private String cleanDate = dateTime.format(formatter);
+    private Gson gson;
 
     LocalDateTime now = LocalDateTime.now();
     JSONObject test = new JSONObject();
 
 
-    public void SaveFile(JSONObject fileTBS){
+    public void saveFile(String fileTBS){
 
         try{
-            file = new FileWriter("C:/Development/DreamSample/Dream2.txt");
-            file.write(fileTBS.toString());
+            filew = new FileWriter("C:/Development/DreamSample/Dream2.txt");
+            filew.write(fileTBS);
             System.out.println("Saved JSON");
         } catch (IOException e){
             e.printStackTrace();
         } finally {
             try {
-                file.flush();
-                file.close();
+                filew.flush();
+                filew.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -36,7 +39,12 @@ public class Dream {
 
     }
 
-    public void PrepareJSON(){
+  /*  public void LoadFile(JSONObject FileTBL){
+        filer = new FileReader("C:/Development/DreamSample/Dream2.txt)");
+        System.out.println("File Read");
+    }
+*/
+    public void prepareJSON(){
 
 
         DreamPage dreamt = new DreamPage();
@@ -48,9 +56,12 @@ public class Dream {
         dreamt2.setDreamBody("Android sheep");
         test.put("1", dreamt);
         test.put("2", dreamt2);
+        System.out.println(test);
         System.out.println("Attempting JSON Storage: ");
-        System.out.println(new Gson().toJson(test));
-
+        gson = new Gson();
+        String createdJson = gson.toJson(dreamt);
+        System.out.println("Created string:" + createdJson);
+        saveFile(createdJson);
 
 
 
@@ -58,7 +69,7 @@ public class Dream {
 
     public static void main(String[] args) {
         Dream dream = new Dream();
-        dream.PrepareJSON();
+        dream.prepareJSON();
 
     }
 
