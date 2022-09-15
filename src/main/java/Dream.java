@@ -3,9 +3,11 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.io.FileReader;
+import java.util.Map;
 
 
 public class Dream {
@@ -14,7 +16,7 @@ public class Dream {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("LLLL dd yyyy HH:mma");
     private LocalDateTime dateTime = LocalDateTime.now();
     private String cleanDate = dateTime.format(formatter);
-    private Gson gson;
+    private Gson gson = new Gson();
 
     LocalDateTime now = LocalDateTime.now();
     JSONObject test = new JSONObject();
@@ -23,7 +25,7 @@ public class Dream {
     public void saveFile(String fileTBS){
 
         try{
-            filew = new FileWriter("C:/Development/DreamSample/Dream2.txt");
+            filew = new FileWriter("C:/Development/DreamSample/Dream2.json");
             filew.write(fileTBS);
             System.out.println("Saved JSON");
         } catch (IOException e){
@@ -39,11 +41,23 @@ public class Dream {
 
     }
 
-  /*  public void LoadFile(JSONObject FileTBL){
-        filer = new FileReader("C:/Development/DreamSample/Dream2.txt)");
-        System.out.println("File Read");
-    }
-*/
+   public void loadFile() {
+       try {
+
+           filer = new FileReader("C:/Development/DreamSample/Dream2.json");
+           System.out.println("File Read");
+
+           Map<?,?> map = gson.fromJson(filer, Map.class);
+
+           for(Map.Entry<?, ?> entry : map.entrySet()) {
+               System.out.println(entry.getKey() + " = " + entry.getValue());
+           }
+
+           filer.close();
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+   }
     public void prepareJSON(){
 
 
@@ -69,7 +83,9 @@ public class Dream {
 
     public static void main(String[] args) {
         Dream dream = new Dream();
+        dream.loadFile();
         dream.prepareJSON();
+
 
     }
 
